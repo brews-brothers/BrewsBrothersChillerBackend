@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy(
     // passReqToCallback: true
   },
   function(token, tokenSecret, profile, done) {
-    console.log(profile)
+    console.log(profile.emails)
     var user = profile.emails[0].value;
 
 
@@ -52,9 +52,10 @@ passport.use(new GoogleStrategy(
 
 
         // res.setHeader('x-token',token);
-
+        var token = jwt.sign(user, process.env.JWT_SECRET, {
+          expiresIn:15778463,
+        })
         var authUrl = process.env.OAUTH_REDIRECT_URL +token;
-
         res.redirect(authUrl);
 
       } else if (info) {
@@ -79,15 +80,12 @@ passport.use(new GoogleStrategy(
       res.send('logged out')
     })
 
-function setToken(user, res) {
-  var token = jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn:15778463,
-  })
 
-  var authUrl =  + token
-  console.log('redirecting to', authUrl);
 
-}
+
+
+
+
 
 module.exports = {
   router: router,
