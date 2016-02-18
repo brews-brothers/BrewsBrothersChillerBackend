@@ -30,6 +30,10 @@ router.get('/', function(req, res, next){
          brews.find({
           brew_id:batchId
         }).limit(1).next(function(err, data){
+          batch.created = data.created,
+          batch.lastRun = data.lastRun,
+          batch.logs = data.logs,
+          batch.notes = data.notes
           batch.schedule = data.schedule;
           res(batch)
           })
@@ -51,7 +55,9 @@ router.post('/', function(req, res, next){
       var brews = db.collection('brews');
       brews.insert({
         brew_id:data[0],
-        schedule: req.body.schedule
+        schedule: req.body.schedule,
+        logs: [],
+        notes: ''
       }, function(){
         res.send("success");
       })
@@ -65,7 +71,25 @@ router.delete('/', function(req, res, next){
     res.end();
   })
 })
-
+router.post('/saveBrew', function(req, res, next){
+  console.log(req.body);
+  db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+    var brews = db.collection('brews');
+    brews.update(
+      {brew_id:req.body.id},
+      {
+        brew_id:req.body.id,
+        schedule: req.body.schedule,
+        created: req.body.created,
+        lastRun: req.body.lastRun,
+        logs: req.body.logs,
+        notes: req.body.notes
+      },
+      {upsert:true}, function(){
+      res.send("success");
+    })
+  });
+})
 router.get('/startBrew', function(req, res, next){
   if(req.user.pi_id){
 
