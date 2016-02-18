@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var express = require('express');
+var errorHandler = require('errorhandler');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -8,6 +9,7 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('bb-server:server');
 var http = require('http');
 var cors = require('cors');
+
 var jwt = require('jsonwebtoken');
 var knex = require('./db/knex');
 var passport = require('passport')
@@ -67,9 +69,17 @@ app.use(passport.initialize());
 //   done(null, user);
 // });
 
+/* Dev Environment for Mongo */
+
+/* Removed due to not using it */
+// if ('development' == app.get('env')) {
+//   app.use(errorHandler());
+//   mongoose.connect('')
+// }
+
 app.use('/', routes);
-app.use('/users', users);
-app.use('/dashboard', getUser, batches);
+app.use('/users',tokenAuthenicated, getUser, users);
+app.use('/dashboard',tokenAuthenicated, getUser, batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 

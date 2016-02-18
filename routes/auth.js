@@ -8,38 +8,38 @@ var jwt = require('jsonwebtoken');
 var env = {
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: process.env.CALLBACK_URL
+  callbackURL: process.env.CALLBACK_URL,
+  passReqToCallback: true
 }
 
 function Users() {
   return knex('users');
 }
 passport.use(new GoogleStrategy(
-  env,
+  {
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL
+    // passReqToCallback: true
+  },
   function(token, tokenSecret, profile, done) {
     var user = profile.emails[0].value;
 
-    // knex('users').select().where('oauthid', user.oauthid).first()
-    //   .then(function(person) {
-    //     if (!person) {
-    //       knex('users').insert({
-    //         first_name: user.first_name,
-    //         last_name: user.last_name,
-    //         oauthid: user.oauthid,
-    //         profile_image_url: user.profile_image_url,
-    //         current_cash: 10000
-    //       }, 'id').then(function(id) {
-    //         user.id = id[0];
-            // done(null, user);
-          // });
-        // } else {
-        //   user.id = person.id;
 
-        // }
-      // })
-      console.log(token+' = token');
-      // console.log(profile);
-        done(null, user);
+      Users().where('email', user).select().first().then(function(hasUser) {
+        console.log(user);
+        if (!hasUser) {
+          console.log("no user");
+          Users().insert({
+            pi_id: null,
+            email: user
+          }).then(function() {
+            done(null,user);
+          })
+        } else {
+          done(null,user);
+        }
+      })
   }
 ));
 
@@ -48,21 +48,16 @@ passport.use(new GoogleStrategy(
       if (err) {
         next(err);
       } else if (user) {
-        console.log(user);
-        Users().where('email', user).select().first().then(function(hasUser) {
-          console.log(user);
-          if (!hasUser) {
-            console.log("no user");
-            Users().insert({
-              pi_id: null,
-              email: user
-            }).then(function() {
-              setToken(user, res);
-            })
-          } else {
-            setToken(user, res);
-          }
-        })
+        console.log('User = '+user);
+
+
+        // res.setHeader('x-token',token);
+        var token = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn:15778463
+      });
+        var authUrl = 'https://brewsbrotherschillerfrontend.firebaseapp.com/#/authenticate/'+token;
+        res.redirect(authUrl);
+
       } else if (info) {
         next(info);
       }
@@ -91,7 +86,7 @@ function setToken(user, res) {
   })
   // res.setHeader('x-token',token);
   var authUrl = 'http://localhost:8080/#/authenticate/'+token;
-  res.redirect(authUrl);
+
 }
 
 module.exports = {
