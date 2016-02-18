@@ -18,7 +18,8 @@ passport.use(new GoogleStrategy(
   {
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
+    callbackURL: process.env.CALLBACK_URL
+    // passReqToCallback: true
   },
   function(token, tokenSecret, profile, done) {
     console.log(profile)
@@ -43,8 +44,7 @@ passport.use(new GoogleStrategy(
         // }
       // })
       console.log(token+' = token');
-      // console.log(profile);
-        done(null, user);
+      done(null, user);
   }
 ));
 
@@ -53,24 +53,26 @@ passport.use(new GoogleStrategy(
       if (err) {
         next(err);
       } else if (user) {
-        console.log(user);
-        Users().where('email', user).select().first().then(function(hasUser) {
-          console.log(user);
-          if (!hasUser) {
-            console.log("no user");
-            Users().insert({
-              pi_id: null,
-              email: user
-            }).then(function() {
-              setToken(user, res);
-            })
-          } else {
-            setToken(user, res);
-          }
-        })
+        console.log('User = '+user);
+        // Users().where('email', user).select().first().then(function(hasUser) {
+        //   console.log(user);
+        //   if (!hasUser) {
+        //     console.log("no user");
+        //     Users().insert({
+        //       pi_id: null,
+        //       email: user
+        //     }).then(function() {
+        //       setToken(user, res);
+        //     })
+        //   } else {
+        //     setToken(user, res);
+        //   }
+        // })
 
         // res.setHeader('x-token',token);
+
         var authUrl = process.env.OAUTH_REDIRECT_URL +token;
+
         res.redirect(authUrl);
 
       } else if (info) {
@@ -99,8 +101,10 @@ function setToken(user, res) {
   var token = jwt.sign(user, process.env.JWT_SECRET, {
     expiresIn:15778463,
   })
+
   var authUrl =  + token
   console.log('redirecting to', authUrl);
+
 }
 
 module.exports = {
