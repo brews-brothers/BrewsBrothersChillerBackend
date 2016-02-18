@@ -246,7 +246,7 @@ function tokenAuthenicated(req, res, next){
 
 function getUser(req, res, next) {
 
-  Users().where('email', token).select().first().then(function(user) {
+  Users().where('email', req.decoded).select().first().then(function(user) {
     if (!user) {
       res.send('Can not find user');
     } else {
