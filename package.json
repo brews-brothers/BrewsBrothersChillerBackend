@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "express-session": "^1.13.0",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^5.7.0",
     "knex": "^0.9.0",
     "mocha": "*",
     "morgan": "~1.6.1",

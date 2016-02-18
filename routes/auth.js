@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var knex = require('../db/knex');
+var jwt = require('jsonwebtoken');
 
 var env = {
   clientID: process.env.CLIENT_ID,
@@ -46,14 +47,12 @@ passport.use(new GoogleStrategy(
       if (err) {
         next(err);
       } else if (user) {
-        req.logIn(user, function(err) {
-          if (err) {
-            next(err);
-          } else {
-            console.log('redirecting to client')
-            res.redirect(process.env.CLIENT_HOST+'/');
-          }
-        });
+        var token = jwt.sign(user, process.env.JWT_SECRET, {
+          expiresIn:15778463
+        })
+        // res.setHeader('x-token',token);
+        var authUrl = 'http://localhost:8080/#/authenticate/'+token;
+        res.redirect(authUrl);
       } else if (info) {
         next(info);
       }
@@ -71,6 +70,11 @@ passport.use(new GoogleStrategy(
       console.log(req.user)
       res.end('success')
     });
+
+    router.get('/logout', function(req, res, next){
+      req.logout();
+      res.send('logged out')
+    })
 
 
 module.exports = {
