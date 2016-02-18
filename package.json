@@ -1,12 +1,13 @@
 {
   "name": "bb-server",
   "version": "0.0.0",
+  "main": "app.js",
   "private": true,
-  "engines": {
-    "node": "4.x"
-  },
   "scripts": {
     "start": "node app.js"
+  },
+  "engines": {
+    "node": "4.2.1"
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
