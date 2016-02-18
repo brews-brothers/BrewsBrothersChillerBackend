@@ -87,10 +87,10 @@ passport.use(new GoogleStrategy(
 
 function setToken(user, res) {
   var token = jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn:15778463
+    expiresIn:15778463,
   })
-  // res.setHeader('x-token',token);
-  var authUrl = 'http://localhost:8080/#/authenticate/'+token;
+  var authUrl = process.env.OAUTH_REDIRECT_URL + token
+  console.log('redirecting to', authUrl);
   res.redirect(authUrl);
 }
 
