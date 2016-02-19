@@ -109,7 +109,8 @@ router.post('/startbrew', function(req, res, next){
 //   console.log(response.body);
 //   res.send('starting your brew');
 // });
-    request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: req.body.schedule}});
+    var toSend = req.body.schedule
+    request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: toSend}});
     res.send('sent the schedule');
   }else{
     res.send('need a pi ip address');
