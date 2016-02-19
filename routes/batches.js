@@ -6,6 +6,7 @@ var db = require('mongodb');
 var promise = require('bluebird');
 var request = require('request');
 var bcrypt = require('bcrypt');
+var unirest = require('unirest');
 
 
 function Batches(){
@@ -101,10 +102,15 @@ router.post('/startbrew', function(req, res, next){
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='test'
     console.log(req.user.pi_id);
-    request.get('http://'+req.user.pi_id+':3000/startycle');
-    request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
-    console.log('sent request')
-    res.send('starting your brew');
+    unirest.post('http://'+req.user.pi_id+':3000/startycle')
+.send({ "parameter": 23, "foo": "bar" })
+.end(function (response) {
+  console.log(response.body);
+  res.send('starting your brew');
+});
+    // request.get('http://'+req.user.pi_id+':3000/startycle');
+    // request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
+
   }else{
     res.send('need a pi ip address');
   }
