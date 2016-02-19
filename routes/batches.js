@@ -102,13 +102,12 @@ router.post('/startbrew', function(req, res, next){
     // var salt = bcrypt.genSaltSync(5);
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='hello'
+
     console.log(req.user.pi_id);
-    unirest.post(req.user.pi_id+'/startcycle')
-.send({ "password": hash, "schedule": req.body.schedule })
-.end(function (response) {
-  console.log(response.body);
-  res.send('starting your brew');
-});
+    unirest.post(req.user.pi_id+'/startcycle').send({ "password": hash, "schedule": req.body.schedule.toString() }).end(function (response) {
+      console.log(response.body);
+      res.send('starting your brew');
+    });
     // var toSend = req.body.schedule
     // request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: toSend}});
     // res.send('sent the schedule');
