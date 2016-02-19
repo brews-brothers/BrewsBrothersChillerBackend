@@ -20,9 +20,7 @@ function Users(){
 
 
 /* GET batches for dashboard */
-
-
-
+//test
 router.get('/', function(req, res, next){
   Batches().where('user_id', req.user.id).select().then(function(batches) {
     console.log(batches);
