@@ -103,7 +103,7 @@ router.post('/startbrew', function(req, res, next){
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='hello'
     console.log(req.user.pi_id);
-    unirest.post('http://73.78.152.219:3000/startycle')
+    unirest.post(req.user.pi_id+'/startcycle')
 .send({ "password": hash, "schedule": req.body.schedule })
 .end(function (response) {
   console.log(response.body);
