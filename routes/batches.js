@@ -93,8 +93,9 @@ router.post('/savebrew', function(req, res, next){
   });
 })
 router.post('/startbrew', function(req, res, next){
-  console.log('here');
+
   if(req.user.pi_id){
+    console.log('have pi id');
     var salt = bcrypt.genSaltSync(5);
     var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     request.post('http://'+req.user.pi_id+'/startycle', {password: hash, sechdule: req.body.sechdule});
