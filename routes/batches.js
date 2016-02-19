@@ -5,6 +5,7 @@ var knex = require('../db/knex');
 var db = require('mongodb');
 var promise = require('bluebird');
 var request = require('request');
+var bcrypt = require('bcrypt');
 
 
 function Batches(){
