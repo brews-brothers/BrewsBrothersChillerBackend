@@ -93,6 +93,7 @@ router.post('/savebrew', function(req, res, next){
   });
 })
 router.post('/startbrew', function(req, res, next){
+  console.log('here');
   if(req.user.pi_id){
     var salt = bcrypt.genSaltSync(5);
     var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
