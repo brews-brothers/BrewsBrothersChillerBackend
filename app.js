@@ -147,7 +147,7 @@ var io = require('socket.io')(server);
 
 io.on('connection',function(socket){
   console.log('Connected');
-  console.log(socket.client);
+  console.log(socket.handshake.address);
   socket.on('logData',function(data){
 
     console.log(data);
