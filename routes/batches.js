@@ -33,12 +33,13 @@ router.get('/', function(req, res, next){
          brews.find({
           brew_id:batchId
         }).limit(1).next(function(err, data){
-          console.log(data);
-          // batch.created = data.created,
-          batch.lastRun = data.lastRun,
-          batch.logs = data.logs,
-          batch.notes = data.notes
-          batch.schedule = data.schedule;
+          if(data){
+            batch.created = data.created,
+            batch.lastRun = data.lastRun,
+            batch.logs = data.logs,
+            batch.notes = data.notes
+            batch.schedule = data.schedule;
+          }
           res(batch)
           })
         })
@@ -102,15 +103,14 @@ router.post('/startbrew', function(req, res, next){
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='test'
     console.log(req.user.pi_id);
-    unirest.post('http://73.78.152.219:3000/startycle')
-.send({ "parameter": 23, "foo": "bar" })
-.end(function (response) {
-  console.log(response.body);
-  res.send('starting your brew');
-});
-    // request.get('http://'+req.user.pi_id+':3000/startycle');
-    // request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
-
+//     unirest.post('http://73.78.152.219:3000/startycle')
+// .send({ "parameter": 23, "foo": "bar" })
+// .end(function (response) {
+//   console.log(response.body);
+//   res.send('starting your brew');
+// });
+    request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
+    res.send('sent the sechdule');
   }else{
     res.send('need a pi ip address');
   }
