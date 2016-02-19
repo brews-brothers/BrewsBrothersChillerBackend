@@ -5,7 +5,7 @@ var knex = require('../db/knex');
 var db = require('mongodb');
 var promise = require('bluebird');
 var request = require('request');
-var bcrypt =
+var bcrypt = require('bcrypt');
 
 function Batches(){
   return knex('batches');
@@ -47,6 +47,7 @@ router.get('/', function(req, res, next){
 })
 
 router.post('/', function(req, res, next){
+  console.log(req.body);
   Batches().insert({
     user_id: req.body.user_id,
     beer_id: req.body.styleNumber,

@@ -78,8 +78,8 @@ app.use(passport.initialize());
 // }
 
 app.use('/', routes);
-app.use('/users',tokenAuthenicated, getUser, users);
-app.use('/dashboard',tokenAuthenicated, getUser, batches);
+app.use('/users', getUser, users);
+app.use('/dashboard', getUser, batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 
@@ -245,8 +245,8 @@ function tokenAuthenicated(req, res, next){
 }
 
 function getUser(req, res, next) {
-
-  Users().where('email', req.decoded).select().first().then(function(user) {
+  var email = 'sample@gmail.com'
+  Users().where('email', email).select().first().then(function(user) {
     if (!user) {
       res.send('Can not find user');
     } else {
