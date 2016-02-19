@@ -147,8 +147,9 @@ var io = require('socket.io')(server);
 
 io.on('connection',function(socket){
   console.log('Connected');
+  console.log(socket.client);
   socket.on('logData',function(data){
-    console.log(socket);
+
     console.log(data);
   });
   socket.on('error', function(err){
