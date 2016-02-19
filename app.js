@@ -78,8 +78,8 @@ app.use(passport.initialize());
 // }
 
 app.use('/', routes);
-app.use('/users',tokenAuthenicated, getUser, users);
-app.use('/dashboard',tokenAuthenicated, getUser, batches);
+app.use('/users', getUser, users);
+app.use('/dashboard', getUser, batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 
@@ -150,7 +150,7 @@ io.on('connection',function(socket){
   console.log(socket.handshake.address);
   socket.on('logData',function(data){
     console.log(data);
-    
+
   });
   socket.on('error', function(err){
     console.log(err);
@@ -250,7 +250,9 @@ function tokenAuthenicated(req, res, next){
 }
 
 function getUser(req, res, next) {
+
   console.log("getting user from db");
+
   Users().where('email', req.decoded).select().first().then(function(user) {
     if (!user) {
       res.send('Can not find user');

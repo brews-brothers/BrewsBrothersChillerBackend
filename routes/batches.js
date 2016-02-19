@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt');
 var unirest = require('unirest');
 
 
+
 function Batches(){
   return knex('batches');
 }
@@ -51,6 +52,7 @@ router.get('/', function(req, res, next){
 })
 
 router.post('/', function(req, res, next){
+  console.log(req.body);
   Batches().insert({
     user_id: req.user.id,
     beer_id: req.body.styleNumber,
@@ -62,7 +64,7 @@ router.post('/', function(req, res, next){
         brew_id:data[0],
         schedule: req.body.schedule,
         logs: [],
-        notes: ''
+        notes: []
       }, function(){
         res.send("success");
       })
