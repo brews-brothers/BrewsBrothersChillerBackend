@@ -20,11 +20,10 @@ function Users(){
 
 
 /* GET batches for dashboard */
-
-
-
+//test
 router.get('/', function(req, res, next){
   Batches().where('user_id', req.user.id).select().then(function(batches) {
+    console.log(batches);
     return promise.map(batches, function(batch) {
       var batchId = batch.id;
       return new Promise(function(res, rej){
@@ -72,10 +71,16 @@ router.post('/', function(req, res, next){
   });
 });
 
-router.delete('/', function(req, res, next){
-  Batches().where('id', req.body.id).del()
+router.delete('/:id', function(req, res, next){
+  console.log(req.params.id);
+  Batches().where('id', req.params.id).del()
   .then(function(){
-    res.end();
+    db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+      var brews = db.collection('brews');
+      brews.remove({brew_id:req.params.id}, function(){
+        res.send("success");
+      })
+    });
   })
 })
 router.post('/savebrew', function(req, res, next){

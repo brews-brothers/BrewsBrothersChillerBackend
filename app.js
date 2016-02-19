@@ -78,8 +78,8 @@ app.use(passport.initialize());
 // }
 
 app.use('/', routes);
-app.use('/users', getUser, users);
-app.use('/dashboard', getUser, batches);
+app.use('/users', tokenAuthenicated, getUser, users);
+app.use('/dashboard', tokenAuthenicated, getUser, batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 
