@@ -59,7 +59,7 @@ router.post('/', function(req, res, next){
         brew_id:data[0],
         schedule: req.body.schedule,
         logs: [],
-        notes: ''
+        notes: []
       }, function(){
         res.send("success");
       })
