@@ -92,7 +92,7 @@ router.post('/saveBrew', function(req, res, next){
     })
   });
 })
-router.get('/startBrew', function(req, res, next){
+router.post('/startbrew', function(req, res, next){
   if(req.user.pi_id){
     var salt = bcrypt.genSaltSync(5);
     var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
