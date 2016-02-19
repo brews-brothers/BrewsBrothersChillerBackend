@@ -103,15 +103,15 @@ router.post('/startbrew', function(req, res, next){
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='hello'
     console.log(req.user.pi_id);
-//     unirest.post('http://73.78.152.219:3000/startycle')
-// .send({ "parameter": 23, "foo": "bar" })
-// .end(function (response) {
-//   console.log(response.body);
-//   res.send('starting your brew');
-// });
-    var toSend = req.body.schedule
-    request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: toSend}});
-    res.send('sent the schedule');
+    unirest.post('http://73.78.152.219:3000/startycle')
+.send({ "password": hash, "schedule": req.body.schedule })
+.end(function (response) {
+  console.log(response.body);
+  res.send('starting your brew');
+});
+    // var toSend = req.body.schedule
+    // request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: toSend}});
+    // res.send('sent the schedule');
   }else{
     res.send('need a pi ip address');
   }
