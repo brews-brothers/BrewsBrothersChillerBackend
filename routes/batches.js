@@ -21,8 +21,8 @@ function Users(){
 
 
 router.get('/', function(req, res, next){
-  console.log(req.body);
-  Batches().where('user_id', req.body.user_id).select().then(function(batches) {
+  Batches().where('user_id', req.user.id).select().then(function(batches) {
+    console.log(batches);
     return promise.map(batches, function(batch) {
       var batchId = batch.id;
       return new Promise(function(res, rej){
@@ -50,7 +50,7 @@ router.get('/', function(req, res, next){
 router.post('/', function(req, res, next){
   console.log(req.body);
   Batches().insert({
-    user_id: req.body.user_id,
+    user_id: req.user.id,
     beer_id: req.body.styleNumber,
     name: req.body.name
   }, 'id').then(function(data){
@@ -68,16 +68,16 @@ router.post('/', function(req, res, next){
   });
 });
 
-router.delete('/', function(req, res, next){
-  Batches().where('id', req.body.id).del()
+router.delete('/:id', function(req, res, next){
+  console.log(req.params.id);
+  Batches().where('id', req.params.id).del()
   .then(function(){
     db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
       var brews = db.collection('brews');
-      brews.remove({brew_id:req.body.id}, function(){
+      brews.remove({brew_id:req.params.id}, function(){
         res.send("success");
       })
     });
-    res.end();
   })
 })
 router.post('/saveBrew', function(req, res, next){
