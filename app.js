@@ -149,8 +149,8 @@ io.on('connection',function(socket){
   console.log('Connected');
   console.log(socket.handshake.address);
   socket.on('logData',function(data){
-
     console.log(data);
+    
   });
   socket.on('error', function(err){
     console.log(err);
