@@ -48,7 +48,7 @@ router.get('/', function(req, res, next){
 
 router.post('/', function(req, res, next){
   Batches().insert({
-    user_id: req.body.user_id,
+    user_id: req.user.id,
     beer_id: req.body.styleNumber,
     name: req.body.name
   }, 'id').then(function(data){
