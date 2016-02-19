@@ -101,7 +101,7 @@ router.post('/startbrew', function(req, res, next){
     console.log('have pi id');
     // var salt = bcrypt.genSaltSync(5);
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
-    var hash='test'
+    var hash='hello'
     console.log(req.user.pi_id);
 //     unirest.post('http://73.78.152.219:3000/startycle')
 // .send({ "parameter": 23, "foo": "bar" })
@@ -109,7 +109,7 @@ router.post('/startbrew', function(req, res, next){
 //   console.log(response.body);
 //   res.send('starting your brew');
 // });
-    request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
+    request.post(req.user.pi_id+'/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
     res.send('sent the sechdule');
   }else{
     res.send('need a pi ip address');
