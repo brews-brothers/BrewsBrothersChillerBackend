@@ -73,7 +73,7 @@ router.delete('/', function(req, res, next){
     res.end();
   })
 })
-router.post('/saveBrew', function(req, res, next){
+router.post('/savebrew', function(req, res, next){
   console.log(req.body);
   db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
     var brews = db.collection('brews');
