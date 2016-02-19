@@ -101,7 +101,8 @@ router.post('/startbrew', function(req, res, next){
     // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
     var hash='test'
     console.log(req.user.pi_id);
-    request.post('http://'+req.user.pi_id+':3000/startycle', {password: hash, sechdule: req.body.sechdule});
+    request.post('http://'+req.user.pi_id+':3000/startycle', {form:{password: hash, sechdule: req.body.sechdule}});
+    console.log('sent request')
     res.send('starting your brew');
   }else{
     res.send('need a pi ip address');
