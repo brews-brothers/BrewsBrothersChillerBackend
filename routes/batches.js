@@ -21,7 +21,8 @@ function Users(){
 
 
 router.get('/', function(req, res, next){
-  Batches().where('user_id', req.user.id).select().then(function(batches) {
+  console.log(req.body);
+  Batches().where('user_id', req.body.user_id).select().then(function(batches) {
     return promise.map(batches, function(batch) {
       var batchId = batch.id;
       return new Promise(function(res, rej){
@@ -70,6 +71,12 @@ router.post('/', function(req, res, next){
 router.delete('/', function(req, res, next){
   Batches().where('id', req.body.id).del()
   .then(function(){
+    db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+      var brews = db.collection('brews');
+      brews.remove({brew_id:req.body.id}, function(){
+        res.send("success");
+      })
+    });
     res.end();
   })
 })
