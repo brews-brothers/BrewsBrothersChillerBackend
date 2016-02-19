@@ -31,7 +31,8 @@ router.get('/', function(req, res, next){
          brews.find({
           brew_id:batchId
         }).limit(1).next(function(err, data){
-          batch.created = data.created,
+          console.log(data);
+          // batch.created = data.created,
           batch.lastRun = data.lastRun,
           batch.logs = data.logs,
           batch.notes = data.notes
