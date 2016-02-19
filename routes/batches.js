@@ -6,6 +6,9 @@ var db = require('mongodb');
 var promise = require('bluebird');
 var request = require('request');
 var bcrypt = require('bcrypt');
+var unirest = require('unirest');
+
+
 
 function Batches(){
   return knex('batches');
@@ -32,11 +35,13 @@ router.get('/', function(req, res, next){
          brews.find({
           brew_id:batchId
         }).limit(1).next(function(err, data){
-          batch.created = data.created,
-          batch.lastRun = data.lastRun,
-          batch.logs = data.logs,
-          batch.notes = data.notes
-          batch.schedule = data.schedule;
+          if(data){
+            batch.created = data.created,
+            batch.lastRun = data.lastRun,
+            batch.logs = data.logs,
+            batch.notes = data.notes
+            batch.schedule = data.schedule;
+          }
           res(batch)
           })
         })
@@ -80,7 +85,7 @@ router.delete('/:id', function(req, res, next){
     });
   })
 })
-router.post('/saveBrew', function(req, res, next){
+router.post('/savebrew', function(req, res, next){
   console.log(req.body);
   db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
     var brews = db.collection('brews');
@@ -99,11 +104,22 @@ router.post('/saveBrew', function(req, res, next){
     })
   });
 })
-router.get('/startBrew', function(req, res, next){
+router.post('/startbrew', function(req, res, next){
+  console.log(req.body);
   if(req.user.pi_id){
-    var salt = bcrypt.genSaltSync(5);
-    var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
-    request.post('http://'+req.user.pi_id+'/startycle', {password: hash, sechdule: req.body.sechdule});
+    console.log('have pi id');
+    // var salt = bcrypt.genSaltSync(5);
+    // var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
+    var hash='hello'
+    var schedule = JSON.stringify(req.body.schedule)
+    console.log(req.user.pi_id);
+    unirest.post(req.user.pi_id+'/startcycle').send({ "password": hash, "schedule": schedule }).end(function (response) {
+      console.log(response.body);
+      res.send('starting your brew');
+    });
+    // var toSend = req.body.schedule
+    // request.post(req.user.pi_id+'/startcycle', {form:{password: hash, schedule: toSend}});
+    // res.send('sent the schedule');
   }else{
     res.send('need a pi ip address');
   }

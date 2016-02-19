@@ -147,8 +147,10 @@ var io = require('socket.io')(server);
 
 io.on('connection',function(socket){
   console.log('Connected');
+  console.log(socket.handshake.address);
   socket.on('logData',function(data){
     console.log(data);
+
   });
   socket.on('error', function(err){
     console.log(err);
@@ -223,11 +225,14 @@ function tokenAuthenicated(req, res, next){
 
  // decode token
  if (token) {
+   console.log('Got token');
  // verifies secret and checks exp
    jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
      if (err) {
+
        return res.json({ success: false, message: 'Failed to authenticate token.' });
      } else {
+       console.log('token is good');
        // if everything is good, save to request for use in other routes
        req.decoded = decoded;
        next();
@@ -245,12 +250,16 @@ function tokenAuthenicated(req, res, next){
 }
 
 function getUser(req, res, next) {
+
+  console.log("getting user from db");
+
   Users().where('email', req.decoded).select().first().then(function(user) {
     if (!user) {
       res.send('Can not find user');
     } else {
       req.user = user;
     }
+    console.log('got the user passing to route');
     next();
   }).catch(function(error) {
     throw error;
